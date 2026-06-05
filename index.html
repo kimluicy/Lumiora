@@ -7,124 +7,190 @@
 
 <style>
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-  background:#f4f6fb;
+background:#f5f6fa;
 }
 
-header{
-  background:white;
-  padding:20px;
-  text-align:center;
-  box-shadow:0 2px 10px rgba(0,0,0,.1);
+.login-page,
+.home-page{
+padding:20px;
 }
 
-h1{
-  font-size:30px;
+.logo{
+font-size:40px;
+font-weight:bold;
+text-align:center;
+margin-top:30px;
 }
 
 .subtitle{
-  color:#666;
-  margin-top:5px;
+text-align:center;
+color:gray;
+margin-bottom:30px;
 }
 
-.container{
-  padding:20px;
+.login-btn{
+width:100%;
+padding:15px;
+margin-top:12px;
+border:none;
+border-radius:14px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.google{background:#4285F4;color:white;}
+.apple{background:black;color:white;}
+.x{background:#111;color:white;}
+.guest{background:#e5e5e5;}
+
+.hidden{
+display:none;
+}
+
+.topbar{
+background:white;
+padding:20px;
+border-radius:18px;
+margin-bottom:20px;
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:15px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
 }
 
 .card{
-  background:white;
-  border-radius:18px;
-  padding:25px 10px;
-  text-align:center;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
+background:white;
+padding:20px;
+border-radius:18px;
+text-align:center;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
 }
 
-.icon{
-  font-size:40px;
-  margin-bottom:10px;
+.action{
+display:flex;
+gap:10px;
+margin-bottom:15px;
 }
 
-footer{
-  text-align:center;
-  padding:20px;
-  color:#777;
+.action button{
+flex:1;
+padding:15px;
+border:none;
+border-radius:14px;
+font-weight:bold;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:15px;
+box-shadow:0 -2px 10px rgba(0,0,0,.1);
 }
 </style>
 </head>
 
 <body>
 
-header>
-  <h1>Lumiora</h1>
-  <div class="subtitle">AI Photo & Video Editor</div>
-</header>
+<div id="loginPage" class="login-page">
 
-<div class="container">
-  <div class="grid">
+<div class="logo">Lumiora</div>
+<div class="subtitle">AI Photo & Video Editor</div>
 
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Face Editor</h3>
-    </div>
+<button class="login-btn google" onclick="login('Google')">
+Continue with Google
+</button>
 
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Body Editor</h3>
-    </div>
+<button class="login-btn apple" onclick="login('Apple')">
+Continue with Apple
+</button>
 
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Hair Editor</h3>
-    </div>
+<button class="login-btn x" onclick="login('X')">
+Continue with X
+</button>
 
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Makeup Editor</h3>
-    </div>
+<button class="login-btn guest" onclick="login('Guest')">
+Continue as Guest
+</button>
 
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Fashion AI</h3>
-    </div>
-
-    <div class="card">
-      <div class="icon"></div>
-      <h3>AI Enhance</h3>
-    </div>
-
-    <div class="card">
-      <div class="icon"></div>
-      <h3>AI Background</h3>
-    </div>
-
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Photo Editor</h3>
-    </div>
-
-    <div class="card">
-      <div class="icon"></div>
-      <h3>Video Editor</h3>
-    </div>
-
-  </div>
 </div>
 
-<footer>
-  © 2026 Lumiora
-</footer>
+<div id="homePage" class="home-page hidden">
+
+<div class="topbar">
+<h2> Lumiora</h2>
+<p>Welcome to AI Beauty Studio</p>
+</div>
+
+<div class="action">
+<button onclick="camera()"> Camera</button>
+<button onclick="gallery()"> Gallery</button>
+</div>
+
+<div class="grid">
+
+<div class="card" onclick="feature('Face Editor')"> Face Editor</div>
+<div class="card" onclick="feature('Body Editor')"> Body Editor</div>
+
+<div class="card" onclick="feature('Hair Editor')"> Hair Editor</div>
+<div class="card" onclick="feature('Makeup Editor')"> Makeup Editor</div>
+
+<div class="card" onclick="feature('Fashion AI')"> Fashion AI</div>
+<div class="card" onclick="feature('AI Enhance')"> AI Enhance</div>
+
+<div class="card" onclick="feature('AI Background')"> AI Background</div>
+<div class="card" onclick="feature('Photo Editor')"> Photo Editor</div>
+
+<div class="card" onclick="feature('Video Editor')"> Video Editor</div>
+<div class="card" onclick="feature('Filters')"> Filters</div>
+
+</div>
+
+<div class="bottom">
+<div> Home</div>
+<div> Camera</div>
+<div> Profile</div>
+</div>
+
+</div>
+
+<script>
+
+function login(provider){
+alert("Login dengan " + provider);
+document.getElementById("loginPage").classList.add("hidden");
+document.getElementById("homePage").classList.remove("hidden");
+}
+
+function camera(){
+alert("Camera feature coming soon");
+}
+
+function gallery(){
+alert("Gallery feature coming soon");
+}
+
+function feature(name){
+alert(name + " coming soon");
+}
+
+</script>
 
 </body>
 </html>
