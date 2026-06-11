@@ -1,196 +1,171 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumiora</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumiora - AI Photo & Video Editor</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        accent: {
+                            cyan: '#06b6d4',
+                            pink: '#ec4899',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-body{
-background:#f5f6fa;
-}
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
-.login-page,
-.home-page{
-padding:20px;
-}
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-.logo{
-font-size:40px;
-font-weight:bold;
-text-align:center;
-margin-top:30px;
-}
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6d28d9; 
+        }
 
-.subtitle{
-text-align:center;
-color:gray;
-margin-bottom:30px;
-}
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-.login-btn{
-width:100%;
-padding:15px;
-margin-top:12px;
-border:none;
-border-radius:14px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-}
+        .glass-light {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
 
-.google{background:#4285F4;color:white;}
-.apple{background:black;color:white;}
-.x{background:#111;color:white;}
-.guest{background:#e5e5e5;}
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(to right, #c084fc, #ec4899, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-.hidden{
-display:none;
-}
-
-.topbar{
-background:white;
-padding:20px;
-border-radius:18px;
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:18px;
-text-align:center;
-font-weight:bold;
-cursor:pointer;
-box-shadow:0 3px 10px rgba(0,0,0,.08);
-}
-
-.action{
-display:flex;
-gap:10px;
-margin-bottom:15px;
-}
-
-.action button{
-flex:1;
-padding:15px;
-border:none;
-border-radius:14px;
-font-weight:bold;
-}
-
-.bottom{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:15px;
-box-shadow:0 -2px 10px rgba(0,0,0,.1);
-}
-</style>
+        /* Range Input Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #4c1d95;
+            border-radius: 2px;
+        }
+        
+        body {
+            background-color: #030712;
+        }
+    </style>
 </head>
+<body class="bg-slate-50 text-slate-900 dark:text-white transition-colors duration-300">
+    <div id="root"></div>
 
-<body>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = Motion;
 
-<div id="loginPage" class="login-page">
+        // Icons
+        const Icons = {
+            Logo: () => (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8 text-brand-500">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            ),
+            Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>,
+            X: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>,
+            Sun: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>,
+            Moon: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>,
+            Download: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>,
+            Play: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>,
+            Check: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>,
+            Star: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>,
+            Sparkles: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+        };
 
-<div class="logo">Lumiora</div>
-<div class="subtitle">AI Photo & Video Editor</div>
+        // --- COMPONENTS ---
 
-<button class="login-btn google" onclick="login('Google')">
-Continue with Google
-</button>
-
-<button class="login-btn apple" onclick="login('Apple')">
-Continue with Apple
-</button>
-
-<button class="login-btn x" onclick="login('X')">
-Continue with X
-</button>
-
-<button class="login-btn guest" onclick="login('Guest')">
-Continue as Guest
-</button>
-
-</div>
-
-<div id="homePage" class="home-page hidden">
-
-<div class="topbar">
-<h2> Lumiora</h2>
-<p>Welcome to AI Beauty Studio</p>
-</div>
-
-<div class="action">
-<button onclick="camera()"> Camera</button>
-<button onclick="gallery()"> Gallery</button>
-</div>
-
-<div class="grid">
-
-<div class="card" onclick="feature('Face Editor')"> Face Editor</div>
-<div class="card" onclick="feature('Body Editor')"> Body Editor</div>
-
-<div class="card" onclick="feature('Hair Editor')"> Hair Editor</div>
-<div class="card" onclick="feature('Makeup Editor')"> Makeup Editor</div>
-
-<div class="card" onclick="feature('Fashion AI')"> Fashion AI</div>
-<div class="card" onclick="feature('AI Enhance')"> AI Enhance</div>
-
-<div class="card" onclick="feature('AI Background')"> AI Background</div>
-<div class="card" onclick="feature('Photo Editor')"> Photo Editor</div>
-
-<div class="card" onclick="feature('Video Editor')"> Video Editor</div>
-<div class="card" onclick="feature('Filters')"> Filters</div>
-
-</div>
-
-<div class="bottom">
-<div> Home</div>
-<div> Camera</div>
-<div> Profile</div>
-</div>
-
-</div>
-
-<script>
-
-function login(provider){
-alert("Login dengan " + provider);
-document.getElementById("loginPage").classList.add("hidden");
-document.getElementById("homePage").classList.remove("hidden");
-}
-
-function camera(){
-alert("Camera feature coming soon");
-}
-
-function gallery(){
-alert("Gallery feature coming soon");
-}
-
-function feature(name){
-alert(name + " coming soon");
-}
-
-</script>
-
-</body>
-</html>
+        // 1. Navigation Bar
+        const Navbar = ({ activeTab, setActiveTab, darkMode, toggleDarkMode })
+      
